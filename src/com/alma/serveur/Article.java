@@ -1,9 +1,13 @@
-package com.alma.vente;
+package com.alma.serveur;
 
 import java.io.Serializable;
 
-public class Article implements Serializable{
+public class Article implements ArticleInt,Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private String titre;
 	private int prixIni;

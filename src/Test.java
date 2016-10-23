@@ -1,42 +1,50 @@
-import java.rmi.Naming;
-import java.rmi.registry.LocateRegistry;
+import java.rmi.RemoteException;
 
 import com.alma.client.ClientImp;
-import com.alma.serveur.ServeurImp;
-import com.alma.serveur.ServeurInt;
 
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RemoteException {
 		// TODO Auto-generated method stub
-		ServeurInt serveurImp ;//= new ServeurImp();
-		int port = ServeurInt.port;
-		String url = ServeurInt.url;
 		
-		try {
-			LocateRegistry.createRegistry(port);
-			serveurImp = new ServeurImp();
-			Naming.bind(url,serveurImp);
+			ClientImp clientImp1 = new ClientImp("1");
+			attente();
+			ClientImp clientImp2 = new ClientImp("2");
+			attente();
+			ClientImp clientImp3 = new ClientImp("3");
+			attente();
 			
-			
-			ClientImp clientImp1 = new ClientImp("1",url);
-			ClientImp clientImp2 = new ClientImp("2",url);
-			ClientImp clientImp3 = new ClientImp("3",url);
-			
-			
-			clientImp1.lookForServer();
-			clientImp2.lookForServer();
-			clientImp3.lookForServer();
+			clientImp1.connexion();
+			attente();
+			clientImp2.connexion();
+			attente();
+			clientImp3.connexion();
+			attente();
 
 			clientImp1.demandeInscription();
+			attente();
 			clientImp2.demandeInscription();
+			attente();
 			clientImp3.demandeInscription();
+			attente(1000);
 			
-		//	serveurImp.listerLesClient();
-		}catch(Exception e) { 
-			System.out.println(e.getMessage());
-		}
+			clientImp1.encherir(50);
+			
+	}
+	
+	
+	public static void attente(){
+		try{
+			Thread.currentThread();
+			Thread.sleep(200);
+		}catch(Exception e){}
+	}
+	public static void attente(int d){
+		try{
+			Thread.currentThread();
+			Thread.sleep(d);
+		}catch(Exception e){}
 	}
 }
 

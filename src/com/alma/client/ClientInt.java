@@ -1,22 +1,19 @@
 package com.alma.client;
 
-import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import com.alma.vente.Vente;
+import com.alma.serveur.VenteInt;
 
-public interface ClientInt extends Remote, Serializable {
-
-	void lookForServer() throws RemoteException;
-	
-	
-	void demandeInscription() throws RemoteException;
-	void majVente(Vente vente) throws RemoteException;
-	void demarreChrono() throws RemoteException;
-	void encherir() throws RemoteException;
-	void tempsEcoule() throws RemoteException;
-	void nouvelleVente(Vente vente) throws RemoteException;
-	
+public interface ClientInt extends Remote {
+	/*
+	 * méthode appelable par le serveur
+	 */
+	void majVente(VenteInt vente) throws RemoteException;
+	void finVente(VenteInt vente) throws RemoteException;
+	void nouvelleVente(VenteInt vente) throws RemoteException;
 	String getId() throws RemoteException;
+	//void demandeInscription() throws RemoteException;
+	//void encherir() throws RemoteException;
+	//void tempsEcoule() throws RemoteException;
 }
