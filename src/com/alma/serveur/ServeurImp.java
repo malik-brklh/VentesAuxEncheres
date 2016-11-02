@@ -40,6 +40,7 @@ public class ServeurImp extends UnicastRemoteObject implements ServeurInt, Seria
 
 		try {
 			Naming.bind(url, this);
+			System.out.println("serveur lancé");
 		} catch (MalformedURLException | AlreadyBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,11 +61,13 @@ public class ServeurImp extends UnicastRemoteObject implements ServeurInt, Seria
 
 	@Override
 	synchronized public void enchirir(OffreInt offre) throws RemoteException {
+		System.out.println("SERVEUR -- ENCHIRISSEMENT");
+		System.out.println("client : "+offre.getClient().getId()+" - offre = "+offre.getNouveauPrix()+" a "+offre.getChrono());
 		venteActuelle.majVente(offre.getClient(), offre.getNouveauPrix(), offre.getChrono());
-		venteActuelle.incNbEnchirissement();
+		/*venteActuelle.incNbEnchirissement();
 		if (venteActuelle.getNbEnchirissement() == this.clientsInscrits.size()) {
 			finVente();
-		} else
+		} else*/
 			for (ClientInt c : clientsInscrits) {
 				c.majVente(venteActuelle);
 			}
@@ -72,8 +75,10 @@ public class ServeurImp extends UnicastRemoteObject implements ServeurInt, Seria
 	}
 
 	@Override
-	public void tempsEcoule() throws RemoteException {
+	public synchronized void tempsEcoule(String id) throws RemoteException {
+		System.out.println(id + " : son temps a été écoulé");
 		this.venteActuelle.incNbEnchirissement();
+		System.out.println("temps ecoulé "+ venteActuelle.getNbEnchirissement() + " on terminé");
 		if (venteActuelle.getNbEnchirissement() == this.clientsInscrits.size()) {
 			finVente();
 		}
@@ -85,14 +90,15 @@ public class ServeurImp extends UnicastRemoteObject implements ServeurInt, Seria
 		for (ClientInt c : clientsInscrits) {
 			c.finVente(venteActuelle);
 		}
+		articles.remove(0);
 		this.venteActuelle = null;
 		this.etatVente = etatVenteEnum.EnAttente;
 		// tester si il y'a un nombre de personne pour commencer une nouvelle
 		// vente
-		if (clientsEnAttente.size() >= nbUserMin) {
-			etatVente = etatVenteEnum.Encours;
-			nouvelleVente();
-		}
+		//if (clientsEnAttente.size() >= nbUserMin) {
+			//etatVente = etatVenteEnum.Encours;
+		//	nouvelleVente();
+		//}
 	}
 
 	public void nouvelleVente() throws RemoteException {
@@ -108,7 +114,7 @@ public class ServeurImp extends UnicastRemoteObject implements ServeurInt, Seria
 					(int) (Math.random() * 1000)));
 		}
 		venteActuelle = new Vente(null, articles.get(0), 0, 0);
-		articles.remove(0);
+		System.out.println("article a vendre : ");
 		for (ClientInt c : clientsInscrits) {
 			c.nouvelleVente(venteActuelle);
 		}

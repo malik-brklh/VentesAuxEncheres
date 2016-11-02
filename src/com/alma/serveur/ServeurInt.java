@@ -16,7 +16,7 @@ public interface ServeurInt extends Remote{
 	 */
 	public void demandeInscription(ClientInt c) throws RemoteException;
 	void enchirir(OffreInt offre) throws RemoteException;
-	void tempsEcoule() throws RemoteException;
+	void tempsEcoule(String id) throws RemoteException;
 	
 	/**
 	 * méthodes internes au serveur

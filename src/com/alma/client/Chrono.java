@@ -1,10 +1,11 @@
 package com.alma.client;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class Chrono extends Thread {
+public class Chrono extends Thread{
 
-	private int delay = 10000;
+	private int delay = 20000;
 	private int precision = 100;
 	private ClientImp proprio;
 	

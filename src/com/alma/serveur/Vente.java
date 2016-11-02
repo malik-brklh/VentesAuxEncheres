@@ -38,34 +38,42 @@ public class Vente implements VenteInt, Serializable {
 		}
 	}
 
+	@Override
 	public ClientInt getAcheteurActuel() {
 		return acheteurActuel;
 	}
 
+	@Override
 	public void setAcheteurActuel(ClientInt acheteurActuel) {
 		this.acheteurActuel = acheteurActuel;
 	}
 
+	@Override
 	public Article getArticle() {
 		return article;
 	}
 
+	@Override
 	public void setArticle(Article article) {
 		this.article = article;
 	}
 
+	@Override
 	public int getPrixGagnant() {
 		return prixGagnant;
 	}
 
+	@Override
 	public void setPrixGagnant(int prixGagnant) {
 		this.prixGagnant = prixGagnant;
 	}
 
+	@Override
 	public double getTempsChrono() {
 		return tempsChrono;
 	}
 
+	@Override
 	public void setTempsChrono(double tempsChrono) {
 		this.tempsChrono = tempsChrono;
 	}

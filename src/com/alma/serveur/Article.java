@@ -19,26 +19,32 @@ public class Article implements ArticleInt,Serializable{
 		this.prixIni = prixIni;
 	}
 
+	@Override
 	public int getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	@Override
 	public String getTitre() {
 		return titre;
 	}
 
+	@Override
 	public void setTitre(String titre) {
 		this.titre = titre;
 	}
 
+	@Override
 	public int getPrixIni() {
 		return prixIni;
 	}
 
+	@Override
 	public void setPrixIni(int prixIni) {
 		this.prixIni = prixIni;
 	}

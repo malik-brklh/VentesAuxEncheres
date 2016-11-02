@@ -1,62 +1,81 @@
 package com.alma.client;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import com.alma.serveur.ServeurInt;
 import com.alma.serveur.VenteInt;
 
-public class ClientImp /* extends UnicastRemoteObject */ implements ClientInt, Serializable {
+public class ClientImp extends UnicastRemoteObject /* JFrame */ implements ClientInt, Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private Chrono chrono;
 	private ServeurInt serveur;
 	private String id;
 	private VenteInt venteActuelle;
 
-	public ClientImp(String id) throws RemoteException {
-		this.setId(id);
-		chrono = null;
-		serveur = null;
-		venteActuelle = null;
+	private ClientIHM ihm;
 
+	public static void main(String[] args) throws RemoteException {
+		new ClientImp("client " + ((int) (Math.random() * 1000)));
+	}
+
+	public ClientImp(String id) throws RemoteException {
+
+		this.setId(id);
+		ihm = new ClientIHM(this);
+
+		connexion();
+	}
+
+	private void printConsole(String t) {
+		ihm.printConsole(t);
 	}
 
 	public void connexion() {
-		System.out.println(this.getId() + " se connecte ...");
+		printConsole(this.getId() + " se connecte ...");
 		try {
 			serveur = (ServeurInt) Naming.lookup(ServeurInt.url);
-			System.out.println("Connexion effectué");
+			printConsole("Connexion effectué");
+			serveur.demandeInscription(this);
 		} catch (MalformedURLException | RemoteException | NotBoundException e) {
-			serveur = null;
+			printConsole("Connexion échoué");
 		}
 
-	}
-
-	public void demandeInscription() throws RemoteException {
-		this.serveur.demandeInscription((ClientInt) this);
 	}
 
 	public void encherir(int marge) throws RemoteException {
 		if (this.venteActuelle == null) {
-			System.out.println("pas de vente");
+			printConsole("pas de vente");
 		} else if (chrono == null) {
-			System.out.println("pas de chrono");
+			printConsole("pas de chrono");
 		} else {
+			printConsole("creation offre");
 			OffreInt offre = new Offre(this, chrono.getCurrentChrono(), venteActuelle.getPrixGagnant() + marge);
-			this.serveur.enchirir(offre);
+			printConsole("offre creee -ancien prix "+venteActuelle.getPrixGagnant()+" - prix proposé "+venteActuelle.getPrixGagnant()+marge);
+			 this.serveur.enchirir(offre);
 		}
 	}
 
 	public void tempsEcoule() throws RemoteException {
-		System.out.println(id + " : temps ecoule");
-		serveur.tempsEcoule();
+		printConsole(id + " : temps ecoule");
+		serveur.tempsEcoule(id);
 	}
 
 	public void setId(String id) {
@@ -73,16 +92,30 @@ public class ClientImp /* extends UnicastRemoteObject */ implements ClientInt, S
 	public void majVente(VenteInt vente) {
 
 		venteActuelle = vente;
+
+		if (((int) Math.random() * 100) > 50) {
+			try {
+				encherir(50);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public void nouvelleVente(VenteInt vente) {
 		this.venteActuelle = vente;
-		System.out.println("client "+id+"\t*** NOUVELLE VENTE RECUE****");
-		System.out.println("Titre = \t" + venteActuelle.getArticle().getTitre());
-		System.out.println("Prix Initiale = \t" + venteActuelle.getArticle().getPrixIni());
-		System.out.println("****************************************");
+		printConsole("client " + id + "\t*** NOUVELLE VENTE RECUE****");
+		printConsole("Titre = \t" + venteActuelle.getArticle().getTitre());
+		printConsole("Prix Initiale = \t" + venteActuelle.getArticle().getPrixIni());
+		printConsole("****************************************");
 		demarreChrono();
+		printConsole("" + ((int) (Math.random() * 1000)));
+		if (((int) (Math.random() * 1000)) > 50) {
+			printConsole(id + " va encherir");
+
+		}
 	}
 
 	@Override
@@ -94,12 +127,12 @@ public class ClientImp /* extends UnicastRemoteObject */ implements ClientInt, S
 	public void finVente(VenteInt vente) throws RemoteException {
 		majVente(vente);
 		if (vente.getAcheteurActuel() == null) {
-			System.out.println("PERSONNE N'A ACHETE CET ARTICLE");
+			printConsole("PERSONNE N'A ACHETE CET ARTICLE");
 		} else if (vente.getAcheteurActuel() == this)
-			System.out.println("BRAVO VOUS AVEZ GAGNE L'ENCHERE");
+			printConsole("BRAVO VOUS AVEZ GAGNE L'ENCHERE");
 		else
-			System.out.println("Dommage pour vous, " + vente.getAcheteurActuel().getId() + " a remporte l'enchere");
-		System.out.println("Article : " + vente.getArticle().getTitre() + "\tPrix : " + vente.getPrixGagnant());
+			printConsole("Dommage pour vous, " + vente.getAcheteurActuel().getId() + " a remporte l'enchere");
+		printConsole("Article : " + vente.getArticle().getTitre() + "\tPrix : " + vente.getPrixGagnant());
 
 	}
 }
