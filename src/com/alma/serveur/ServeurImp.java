@@ -64,14 +64,13 @@ public class ServeurImp extends UnicastRemoteObject implements ServeurInt, Seria
 		System.out.println("SERVEUR -- ENCHIRISSEMENT");
 		System.out.println("client : "+offre.getClient().getId()+" - offre = "+offre.getNouveauPrix()+" a "+offre.getChrono());
 		venteActuelle.majVente(offre.getClient(), offre.getNouveauPrix(), offre.getChrono());
-		/*venteActuelle.incNbEnchirissement();
+		venteActuelle.incNbEnchirissement();
 		if (venteActuelle.getNbEnchirissement() == this.clientsInscrits.size()) {
 			finVente();
-		} else*/
+		} else
 			for (ClientInt c : clientsInscrits) {
 				c.majVente(venteActuelle);
 			}
-
 	}
 
 	@Override
@@ -95,10 +94,10 @@ public class ServeurImp extends UnicastRemoteObject implements ServeurInt, Seria
 		this.etatVente = etatVenteEnum.EnAttente;
 		// tester si il y'a un nombre de personne pour commencer une nouvelle
 		// vente
-		//if (clientsEnAttente.size() >= nbUserMin) {
-			//etatVente = etatVenteEnum.Encours;
-		//	nouvelleVente();
-		//}
+		if (clientsEnAttente.size() >= nbUserMin) {
+			etatVente = etatVenteEnum.Encours;
+			nouvelleVente();
+		}
 	}
 
 	public void nouvelleVente() throws RemoteException {

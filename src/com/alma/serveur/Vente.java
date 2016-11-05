@@ -11,7 +11,7 @@ public class Vente implements VenteInt, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private ClientInt acheteurActuel;
-	private Article article;
+	private ArticleInt article;
 	private int prixGagnant;
 	private double tempsChrono;
 	private int nbEnchirissement=0;
@@ -49,12 +49,12 @@ public class Vente implements VenteInt, Serializable {
 	}
 
 	@Override
-	public Article getArticle() {
+	public ArticleInt getArticle() {
 		return article;
 	}
 
 	@Override
-	public void setArticle(Article article) {
+	public void setArticle(ArticleInt article) {
 		this.article = article;
 	}
 
