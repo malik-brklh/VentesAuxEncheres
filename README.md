@@ -1,2 +1,0 @@
-# VentesAuxEncheres
-Java - RMI 
